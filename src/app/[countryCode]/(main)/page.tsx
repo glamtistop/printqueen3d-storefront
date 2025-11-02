@@ -1,41 +1,267 @@
 import { Metadata } from "next"
-
-import FeaturedProducts from "@modules/home/components/featured-products"
-import Hero from "@modules/home/components/hero"
-import { listCollections } from "@lib/data/collections"
+import Link from "next/link"
+import Image from "next/image"
 import { getRegion } from "@lib/data/regions"
+import { listCollections } from "@lib/data/collections"
+import { listProducts } from "@lib/data/products"
+import ProductPreview from "@modules/products/components/product-preview"
+import { HttpTypes } from "@medusajs/types"
 
 export const metadata: Metadata = {
-  title: "Medusa Next.js Starter Template",
-  description:
-    "A performant frontend ecommerce starter template with Next.js 15 and Medusa.",
+  title: "Print Queen 3D | Professional NFC + 3D Printing Services",
+  description: "Premium precision. Fast turnaround. Local Los Angeles expertise. Custom NFC payment stands, QR displays, and 3D printed products for businesses.",
 }
 
 export default async function Home(props: {
   params: Promise<{ countryCode: string }>
 }) {
   const params = await props.params
-
   const { countryCode } = params
-
   const region = await getRegion(countryCode)
 
-  const { collections } = await listCollections({
-    fields: "id, handle, title",
-  })
-
-  if (!collections || !region) {
+  if (!region) {
     return null
   }
 
+  // Get collections
+  const { collections } = await listCollections({ limit: "100", offset: "0" })
+  const featuredCollection = collections?.find((c: HttpTypes.StoreCollection) => c.handle === 'featured' || c.handle === '/featured')
+  
+  // Get featured products - showing 12 for variety
+  const { response: productsResponse } = await listProducts({
+    queryParams: {
+      limit: 12,
+      collection_id: featuredCollection?.id ? [featuredCollection.id] : undefined,
+    },
+    countryCode,
+  })
+
+  const featuredProducts = productsResponse?.products || []
+
   return (
     <>
-      <Hero />
-      <div className="py-12">
-        <ul className="flex flex-col gap-x-6">
-          <FeaturedProducts collections={collections} region={region} />
-        </ul>
+      {/* Announcement Banner - Scrolling text */}
+      <div className="bg-gradient-to-r from-brand-pink via-brand-orange to-brand-yellow text-white py-3 overflow-hidden">
+        <div className="animate-marquee whitespace-nowrap">
+          <span className="text-sm font-bold mx-8">Fast & reliable U.S. shipping · Local pickup in Los Angeles, Altadena, Long Beach, Hawthorne, West Covina</span>
+          <span className="text-sm font-bold mx-8">Handmade 3D printed designs made to order in LA</span>
+          <span className="text-sm font-bold mx-8">Join our list and get 10% off your first order</span>
+          <span className="text-sm font-bold mx-8">Fast & reliable U.S. shipping · Local pickup in Los Angeles, Altadena, Long Beach, Hawthorne, West Covina</span>
+          <span className="text-sm font-bold mx-8">Handmade 3D printed designs made to order in LA</span>
+        </div>
       </div>
+
+      {/* Hero Banner - Your Custom Banner */}
+      <section className="relative w-full">
+        <Image
+          src="/hero-banner.png"
+          alt="Print Queen 3D - NFC Payment Stands"
+          width={1920}
+          height={700}
+          className="w-full h-auto"
+          priority
+          quality={100}
+        />
+      </section>
+
+      {/* Collections Grid - 2 on mobile, 6 on desktop */}
+      <section className="py-12 bg-gradient-to-br from-white via-brand-cream to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 md:gap-4">
+            {/* NFC Stands */}
+            <Link 
+              href={`/${countryCode}/store`}
+              className="relative group overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-brand-green to-brand-cyan hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 text-center">
+                <div className="text-3xl md:text-4xl mb-1">💳</div>
+                <h3 className="text-xs md:text-sm lg:text-base font-display font-bold drop-shadow-lg">NFC Stands</h3>
+              </div>
+            </Link>
+
+            {/* 3D Printed Products */}
+            <Link 
+              href={`/${countryCode}/store`}
+              className="relative group overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-brand-pink to-brand-orange hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 text-center">
+                <div className="text-3xl md:text-4xl mb-1">🎨</div>
+                <h3 className="text-xs md:text-sm lg:text-base font-display font-bold drop-shadow-lg">3D Printing</h3>
+              </div>
+            </Link>
+
+            {/* QR Code Displays */}
+            <Link 
+              href={`/${countryCode}/store`}
+              className="relative group overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-brand-yellow to-brand-orange hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 text-center">
+                <div className="text-3xl md:text-4xl mb-1">📱</div>
+                <h3 className="text-xs md:text-sm lg:text-base font-display font-bold drop-shadow-lg">QR Displays</h3>
+              </div>
+            </Link>
+
+            {/* NFC Keychains */}
+            <Link 
+              href={`/${countryCode}/store`}
+              className="relative group overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-brand-cyan to-brand-blue hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 text-center">
+                <div className="text-3xl md:text-4xl mb-1">🔑</div>
+                <h3 className="text-xs md:text-sm lg:text-base font-display font-bold drop-shadow-lg">NFC Keychains</h3>
+              </div>
+            </Link>
+
+            {/* Business Signage */}
+            <Link 
+              href={`/${countryCode}/store`}
+              className="relative group overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-brand-pink to-brand-yellow hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 text-center">
+                <div className="text-3xl md:text-4xl mb-1">🪧</div>
+                <h3 className="text-xs md:text-sm lg:text-base font-display font-bold drop-shadow-lg">Signage</h3>
+              </div>
+            </Link>
+
+            {/* Custom Orders */}
+            <Link 
+              href={`/${countryCode}/quote`}
+              className="relative group overflow-hidden rounded-xl aspect-square bg-gradient-to-br from-brand-green via-brand-cyan to-brand-blue hover:scale-105 transition-transform duration-300 shadow-lg"
+            >
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-2 text-center">
+                <div className="text-3xl md:text-4xl mb-1">✨</div>
+                <h3 className="text-xs md:text-sm lg:text-base font-display font-bold drop-shadow-lg">Custom</h3>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products Grid */}
+      {featuredProducts.length > 0 && (
+        <section className="py-12 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="font-display text-4xl font-bold mb-2">
+                <span className="bg-gradient-to-r from-brand-pink via-brand-orange to-brand-yellow bg-clip-text text-transparent">
+                  Customer favorites
+                </span>
+              </h2>
+              <p className="text-lg text-gray-700">Our best-selling custom prints and smart designs</p>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 md:gap-4">
+              {featuredProducts.map((product: HttpTypes.StoreProduct) => (
+                <ProductPreview 
+                  key={product.id} 
+                  product={product} 
+                  region={region}
+                  isFeatured
+                />
+              ))}
+            </div>
+            <div className="text-center mt-8">
+              <Link 
+                href={`/${countryCode}/store`}
+                className="inline-block bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-blue hover:to-brand-cyan text-white font-bold py-3 px-8 rounded-full text-base transition-all duration-300 transform hover:scale-110 shadow-lg"
+              >
+                View All Products →
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Benefits/Why Choose Us Section */}
+      <section className="py-16 bg-gradient-to-br from-brand-cream via-white to-brand-cream">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
+              <span className="bg-gradient-to-r from-brand-green via-brand-cyan to-brand-blue bg-clip-text text-transparent">
+                Why Choose Print Queen 3D?
+              </span>
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center p-6 rounded-2xl bg-white hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-brand-green/20">
+              <div className="w-20 h-20 bg-gradient-to-br from-brand-green to-brand-cyan rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-4xl">⚡</span>
+              </div>
+              <h3 className="font-display text-xl font-bold text-brand-blue mb-2">Fast Turnaround</h3>
+              <p className="text-gray-700">1-3 day processing for quick delivery</p>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl bg-white hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-brand-yellow/20">
+              <div className="w-20 h-20 bg-gradient-to-br from-brand-yellow to-brand-orange rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-4xl">🎯</span>
+              </div>
+              <h3 className="font-display text-xl font-bold text-brand-blue mb-2">Precision Quality</h3>
+              <p className="text-gray-700">Professional-grade 3D printing</p>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl bg-white hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-brand-cyan/20">
+              <div className="w-20 h-20 bg-gradient-to-br from-brand-cyan to-brand-blue rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-4xl">💡</span>
+              </div>
+              <h3 className="font-display text-xl font-bold text-brand-blue mb-2">Expert Support</h3>
+              <p className="text-gray-700">Guidance from concept to completion</p>
+            </div>
+
+            <div className="text-center p-6 rounded-2xl bg-white hover:shadow-xl transition-all duration-300 transform hover:scale-105 border-2 border-brand-pink/20">
+              <div className="w-20 h-20 bg-gradient-to-br from-brand-pink to-brand-orange rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-4xl">🌟</span>
+              </div>
+              <h3 className="font-display text-xl font-bold text-brand-blue mb-2">Local LA Service</h3>
+              <p className="text-gray-700">Supporting local businesses</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Email Signup Section */}
+      <section className="py-16 bg-brand-pink">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">
+            Want 10% off?
+          </h2>
+          <p className="text-lg text-white mb-8">
+            Join the royal list for new drops, exclusive offers, and a 10% welcome coupon. We send good vibes only.
+          </p>
+          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-6 py-4 rounded-full text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/50"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-white text-brand-pink font-bold px-8 py-4 rounded-full hover:bg-brand-cream transition-all duration-300 transform hover:scale-105 shadow-lg"
+            >
+              Get my 10%
+            </button>
+          </form>
+        </div>
+      </section>
+
+      {/* Made to Order Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6">
+            <span className="bg-gradient-to-r from-brand-pink via-brand-orange to-brand-yellow bg-clip-text text-transparent">
+              Made to order in Los Angeles
+            </span>
+          </h2>
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            Print Queen 3D turns creativity into tangible design. We specialize in premium, made-to-order 3D prints—NFC payment stands, QR displays, personalized keychains and charms, lithophane lamps, vases, fidgets, and custom pieces for events and brands. Every item is printed locally in LA with quality materials, then checked by hand for a clean, professional finish. Whether you're a business that needs smart, on-brand tools or you're gifting something one-of-a-kind, we deliver fast, friendly service and precision results. Your ideas deserve to be printed perfectly.
+          </p>
+          <Link 
+            href={`/${countryCode}/about`}
+            className="inline-block text-brand-blue font-bold hover:text-brand-cyan transition-colors"
+          >
+            Learn more about us →
+          </Link>
+        </div>
+      </section>
     </>
   )
 }

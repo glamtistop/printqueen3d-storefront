@@ -30,7 +30,7 @@ export default async function ProductPreview({
 
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
+      <div data-testid="product-wrapper" className="hover:scale-105 transition-transform duration-300">
         <Thumbnail
           thumbnail={product.thumbnail}
           images={product.images}

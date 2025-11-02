@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-
+import Image from "next/image"
 import { listRegions } from "@lib/data/regions"
 import { StoreRegion } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
@@ -11,28 +11,71 @@ export default async function Nav() {
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
-      <header className="relative h-16 mx-auto border-b duration-200 bg-white border-ui-border-base">
-        <nav className="content-container txt-xsmall-plus text-ui-fg-subtle flex items-center justify-between w-full h-full text-small-regular">
-          <div className="flex-1 basis-0 h-full flex items-center">
-            <div className="h-full">
-              <SideMenu regions={regions} />
-            </div>
+      <header className="relative h-20 mx-auto duration-200 bg-white border-b border-gray-200 shadow-sm">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between w-full h-full">
+          {/* Mobile Menu */}
+          <div className="flex lg:hidden h-full items-center">
+            <SideMenu regions={regions} />
           </div>
 
+          {/* Logo */}
           <div className="flex items-center h-full">
             <LocalizedClientLink
               href="/"
-              className="txt-compact-xlarge-plus hover:text-ui-fg-base uppercase"
+              className="flex items-center hover:opacity-80 transition-opacity duration-300"
               data-testid="nav-store-link"
             >
-              Medusa Store
+              <Image
+                src="/printqueen-logo.png"
+                alt="Print Queen 3D"
+                width={240}
+                height={80}
+                className="h-16 w-auto"
+                priority
+                quality={100}
+              />
             </LocalizedClientLink>
           </div>
 
-          <div className="flex items-center gap-x-6 h-full flex-1 basis-0 justify-end">
-            <div className="hidden small:flex items-center gap-x-6 h-full">
+          {/* Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center gap-x-8 h-full">
+            <LocalizedClientLink
+              className="text-gray-700 hover:text-brand-cyan font-medium transition-colors duration-200"
+              href="/"
+            >
+              Home
+            </LocalizedClientLink>
+            <LocalizedClientLink
+              className="text-gray-700 hover:text-brand-cyan font-medium transition-colors duration-200"
+              href="/store"
+            >
+              Shop
+            </LocalizedClientLink>
+            <LocalizedClientLink
+              className="text-gray-700 hover:text-brand-cyan font-medium transition-colors duration-200"
+              href="/portfolio"
+            >
+              Portfolio
+            </LocalizedClientLink>
+            <LocalizedClientLink
+              className="text-gray-700 hover:text-brand-cyan font-medium transition-colors duration-200"
+              href="/about"
+            >
+              About
+            </LocalizedClientLink>
+            <LocalizedClientLink
+              className="bg-brand-cyan hover:bg-brand-neon text-brand-navy font-bold px-6 py-2 rounded-lg transition-all duration-300 transform hover:scale-105"
+              href="/quote"
+            >
+              Get Quote
+            </LocalizedClientLink>
+          </div>
+
+          {/* Right Side - Account & Cart */}
+          <div className="flex items-center gap-x-4 h-full">
+            <div className="hidden sm:flex items-center gap-x-4 h-full">
               <LocalizedClientLink
-                className="hover:text-ui-fg-base"
+                className="text-gray-700 hover:text-brand-cyan font-medium transition-colors duration-200"
                 href="/account"
                 data-testid="nav-account-link"
               >
@@ -42,7 +85,7 @@ export default async function Nav() {
             <Suspense
               fallback={
                 <LocalizedClientLink
-                  className="hover:text-ui-fg-base flex gap-2"
+                  className="text-gray-700 hover:text-brand-cyan font-medium flex gap-2 transition-colors duration-200"
                   href="/cart"
                   data-testid="nav-cart-link"
                 >

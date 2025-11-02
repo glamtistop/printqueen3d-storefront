@@ -34,6 +34,16 @@ module.exports = {
           80: "#1F2937",
           90: "#111827",
         },
+        // Print Queen 3D Brand Colors - From Logo
+        brand: {
+          green: "#7FD354",      // Bright green from logo
+          cyan: "#5BC5CB",       // Turquoise from logo
+          yellow: "#F7D745",     // Yellow from logo
+          blue: "#0000CD",       // Deep blue from logo
+          pink: "#FF1F7D",       // Hot pink from logo
+          orange: "#FF6633",     // Orange from logo
+          cream: "#F5F5DC",      // Cream background
+        },
       },
       borderRadius: {
         none: "0px",
@@ -60,6 +70,7 @@ module.exports = {
       },
       fontFamily: {
         sans: [
+          "Montserrat",
           "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
@@ -67,6 +78,12 @@ module.exports = {
           "Roboto",
           "Helvetica Neue",
           "Ubuntu",
+          "sans-serif",
+        ],
+        display: [
+          "Orbitron",
+          "Exo",
+          "Montserrat",
           "sans-serif",
         ],
       },
@@ -140,6 +157,10 @@ module.exports = {
           "0%": { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(0)" },
         },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         ring: "ring 2.2s cubic-bezier(0.5, 0, 0.5, 1) infinite",
@@ -155,6 +176,7 @@ module.exports = {
         enter: "enter 200ms ease-out",
         "slide-in": "slide-in 1.2s cubic-bezier(.41,.73,.51,1.02)",
         leave: "leave 150ms ease-in forwards",
+        marquee: "marquee 25s linear infinite",
       },
     },
   },
